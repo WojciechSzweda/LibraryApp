@@ -1,0 +1,17 @@
+﻿<Window x:Class="Biblioteka.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Biblioteka"
+        mc:Ignorable="d"
+        Title="Settings" Height="211.388" Width="410.951" WindowStartupLocation="CenterScreen" 
+    Left="400" Top="300">
+    <Grid>
+        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="301,107,0,0" VerticalAlignment="Top" Width="75" Click="btnOK_Click"/>
+        <Button x:Name="btnCancel" Content="Anuluj" HorizontalAlignment="Left" Margin="199,107,0,0" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
+        <Label x:Name="label" Content="WORK IN PROGRESS" HorizontalAlignment="Left" Margin="107,36,0,0" VerticalAlignment="Top" Height="57" Width="252"/>
+
+
+    </Grid>
+</Window>
