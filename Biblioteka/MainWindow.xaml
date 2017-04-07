@@ -26,6 +26,7 @@
             </Button>
         </Grid>
         <TabControl x:Name="tabControl" Grid.Row="1" HorizontalAlignment="Stretch" Height="auto" Margin="0" VerticalAlignment="Stretch" Width="auto" Grid.ColumnSpan="3" Background="#FFF9F9F9">
+            
             <TabItem Header="Card">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -100,7 +101,17 @@
                     </Grid>
                 </Grid>
             </TabItem>
-
+            <TabItem Header="Book Renting">
+                <Grid>
+                    <Label Content="Card ID:" Margin="10,49,408,316"/>
+                    <TextBox Name="tbBRcardID" Text="" Margin="113,49,302,316" />
+                    <Label Content="Book Copy ID:" VerticalContentAlignment="Center" Margin="10,110,373,250" />
+                    <TextBox Name="tbBRcopyID" Text="" Margin="113,110,302,250" />
+                    <DataGrid x:Name="dgShowCopyInfo" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top" Height="77" Width="399"/>
+                    <Button x:Name="btnRentBook" Content="Rent" HorizontalAlignment="Left" Margin="44,279,0,0" VerticalAlignment="Top" Width="69" Click="btnRentBook_Click"/>
+                    <Button x:Name="btnShowCopyInfo" Content="Show Info" HorizontalAlignment="Left" Margin="227,118,0,0" VerticalAlignment="Top" Width="74" Height="23" Click="btnShowCopyInfo_Click" RenderTransformOrigin="1.068,0.478"/>
+                </Grid>
+            </TabItem>
         </TabControl>
 
     </Grid>

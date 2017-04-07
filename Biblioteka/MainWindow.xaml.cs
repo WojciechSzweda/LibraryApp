@@ -84,6 +84,7 @@ namespace Biblioteka
             e.Handled = regexNumbers.IsMatch(e.Text);
         }
 
+
         #region oldsql
         //private void TestConnection()
         //{
@@ -259,6 +260,14 @@ namespace Biblioteka
         //}
         #endregion
 
+        private void btnRentBook_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void btnShowCopyInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DataBaseContext.ShowBookCopyInfo(tbBRcopyID, dgShowCopyInfo);
+        }
     }
 }

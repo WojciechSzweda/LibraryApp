@@ -70,7 +70,7 @@ namespace Biblioteka
                     context.Karta.Add(card);
                     context.SaveChanges();
                     //newCardID = card.ID;
-                    RegisterCompleted(card.ID);
+                    RegisterCompleted(card.ID); //TODO: set up event
                 }
             }
             catch (Exception ex)
@@ -82,6 +82,22 @@ namespace Biblioteka
         private static void RegisterCompleted(int id)
         {
             MessageBox.Show($"New ID: {id}", "Registration successful", MessageBoxButton.OK);
+        }
+
+        static public void ShowBookCopyInfo(TextBox tbCopyID, DataGrid dgCopyInfo)
+        {
+            int cardNr;
+            if (int.TryParse(tbCopyID.Text, out cardNr)) { //TODO: method
+                using (var context = new LibraryEntities())
+                {
+                    var copyInfo = from c in context.Kopia
+                                   join b in context.Książka on c.ID_Książka equals b.ID
+                                   where c.ID == cardNr
+                                   select new { b.Tytuł, b.Rok_wydania, b.ISBN, c.Stan_Książki };
+
+                    dgCopyInfo.ItemsSource = copyInfo.ToList();
+            }
+            }
         }
     }
 }
