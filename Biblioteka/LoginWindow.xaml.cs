@@ -25,7 +25,7 @@ namespace Biblioteka
         {
             using (new WaitCursor())
             {
-                if (Login.TryLogin(tbLogin.Text, tbPassword.Password))
+                if (!Login.TryLogin(tbLogin.Text, tbPassword.Password))
                 {
                     this.Close();
                 }
@@ -52,6 +52,7 @@ namespace Biblioteka
 
     public class CustomEventArgs : EventArgs
     {
-
+        public string MessageText { get; set; }
+        public string Caption { get; set; }
     }
 }

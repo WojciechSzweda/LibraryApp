@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibraryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LibraryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Autor">
           <Key>
             <PropertyRef Name="ID" />
@@ -302,6 +302,20 @@ warning 6002: The table/view 'D:\PROGRAMOWANIE\P4\BIBLIOTEKA\BIBLIOTEKA\BIBLIOTE
           </ReferentialConstraint>
         </Association>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="GetRentedBooks" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="idCard" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="ID" Type="int" />
+                <Property Name="Rent Date" Type="datetime" />
+                <Property Name="Rent Until" Type="date" />
+                <Property Name="Return Date" Type="datetime" />
+                <Property Name="Title" Type="nvarchar" MaxLength="500" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_id" Type="int" Mode="In" />
@@ -407,8 +421,7 @@ warning 6002: The table/view 'D:\PROGRAMOWANIE\P4\BIBLIOTEKA\BIBLIOTEKA\BIBLIOTE
             <End Role="Wypożyczenie" EntitySet="Wypożyczenie" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LibraryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -830,6 +843,9 @@ warning 6002: The table/view 'D:\PROGRAMOWANIE\P4\BIBLIOTEKA\BIBLIOTEKA\BIBLIOTE
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="GetRentedBooks" IsComposable="true" ReturnType="Collection(LibraryModel.GetRentedBooks_Result)">
+          <Parameter Name="idCard" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="sp_helpdiagramdefinition_Result">
           <Property Type="Int32" Name="version" Nullable="true" />
@@ -841,6 +857,13 @@ warning 6002: The table/view 'D:\PROGRAMOWANIE\P4\BIBLIOTEKA\BIBLIOTEKA\BIBLIOTE
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetRentedBooks_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="DateTime" Name="Rent_Date" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="Rent_Until" Nullable="true" Precision="10" />
+          <Property Type="DateTime" Name="Return_Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="500" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1023,6 +1046,17 @@ warning 6002: The table/view 'D:\PROGRAMOWANIE\P4\BIBLIOTEKA\BIBLIOTEKA\BIBLIOTE
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="LibraryModel.Store.sp_renamediagram" />
           <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="LibraryModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="GetRentedBooks" FunctionName="LibraryModel.Store.GetRentedBooks">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibraryModel.GetRentedBooks_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Rent_Date" ColumnName="Rent Date" />
+                <ScalarProperty Name="Rent_Until" ColumnName="Rent Until" />
+                <ScalarProperty Name="Return_Date" ColumnName="Return Date" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

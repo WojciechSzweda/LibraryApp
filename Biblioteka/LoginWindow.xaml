@@ -6,21 +6,24 @@
         xmlns:local="clr-namespace:Biblioteka"
         xmlns:ee="http://schemas.microsoft.com/expression/2010/effects" x:Class="Biblioteka.LoginWindow"
         mc:Ignorable="d"
+    
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        FontFamily="{DynamicResource MaterialDesignFont}"
+    
+        Background="Transparent"
         Title="Login" Height="168.879" Width="316.476" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" 
-        Foreground="#FF060606" WindowStyle="None" Topmost="True" AllowDrop="True" 
+        Foreground="#FF060606" WindowStyle="None" AllowsTransparency="True" Topmost="True" AllowDrop="True" 
         ShowInTaskbar="False">
+
     <Window.Resources>
-        <Storyboard x:Key="OnMouseEnter1">
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="btnLoginCancel">
-                <EasingColorKeyFrame KeyTime="0:0:0.8" Value="#FFF76A6A"/>
-            </ColorAnimationUsingKeyFrames>
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="btnLoginCancel">
-                <EasingColorKeyFrame KeyTime="0" Value="#FF707070"/>
-                <EasingColorKeyFrame KeyTime="0:0:0.8" Value="#FF707070"/>
-            </ColorAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="OnClick1">
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbPassword">
+
+        <Storyboard x:Key="OnLoginClick">
+            <!--<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbPassword">
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="Red"/>
             </ColorAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="tbPassword">
@@ -31,62 +34,54 @@
             </ColorAnimationUsingKeyFrames>
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="tbLogin">
                 <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="2"/>
-            </ThicknessAnimationUsingKeyFrames>
+            </ThicknessAnimationUsingKeyFrames>-->
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lblLoginError">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+            </ObjectAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lblLoginError">
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="OnTextChangedLogin"/>
-        <Storyboard x:Key="TextBoxDefault">
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbLogin">
+        <Storyboard x:Key="OnTextChangedLoginOrPassword">
+            <!--<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbLogin">
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFB2B5BB"/>
             </ColorAnimationUsingKeyFrames>
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbPassword">
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFB8BAC1"/>
-            </ColorAnimationUsingKeyFrames>
+            </ColorAnimationUsingKeyFrames>-->
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lblLoginError">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Hidden}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="btnLoginOK">
-            <BeginStoryboard x:Name="OnClick1_BeginStoryboard" Storyboard="{StaticResource OnClick1}"/>
+            <BeginStoryboard x:Name="OnClick1_BeginStoryboard" Storyboard="{StaticResource OnLoginClick}"/>
         </EventTrigger>
         <EventTrigger RoutedEvent="TextBoxBase.TextChanged" SourceName="tbLogin">
-            <BeginStoryboard x:Name="TextBoxDefault_BeginStoryboard" Storyboard="{StaticResource TextBoxDefault}"/>
+            <BeginStoryboard x:Name="OnTextChangedLogin_BeginStoryboard" Storyboard="{StaticResource OnTextChangedLoginOrPassword}"/>
         </EventTrigger>
         <EventTrigger RoutedEvent="PasswordBox.PasswordChanged" SourceName="tbPassword">
-            <BeginStoryboard x:Name="TextBoxDefault_BeginStoryboard1" Storyboard="{StaticResource TextBoxDefault}"/>
+            <BeginStoryboard x:Name="OnTextChangedPassword_BeginStoryboard1" Storyboard="{StaticResource OnTextChangedLoginOrPassword}"/>
         </EventTrigger>
     </Window.Triggers>
-    <Window.Effect>
-        <DropShadowEffect ShadowDepth="8"/>
-    </Window.Effect>
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-            <GradientStop Color="Black" Offset="1"/>
-            <GradientStop Color="#FF979191"/>
-        </LinearGradientBrush>
-    </Window.Background>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="159*"/>
-            <ColumnDefinition Width="136*"/>
-        </Grid.ColumnDefinitions>
-        <Label Content="Login" Margin="10,22.416,68.268,62.584" Foreground="White" FontSize="14" FontWeight="Bold" d:LayoutOverrides="HorizontalAlignment" />
-        <Label Content="Password" Margin="10,56.208,68.268,28.792" Foreground="White" FontSize="14" FontWeight="Bold" d:LayoutOverrides="HorizontalAlignment, VerticalAlignment" />
-        <TextBox  x:Name="tbLogin" HorizontalAlignment="Left" Height="23" Margin="-69.268,25,0,0" TextWrapping="Wrap" 
-                  VerticalAlignment="Top" Width="183.169" Foreground="#FF1B1B1B" Background="#FFFFFFFE" Grid.Column="1" 
+
+    <Border CornerRadius="30" BorderBrush="DarkSlateBlue" BorderThickness="2" Background="#FFD1D0D0">
+        <Grid  >
+            <Label Content="Login" Margin="10,25,74,118" Foreground="Black" FontSize="14" FontWeight="Bold" Height="26"/>
+            <Label Content="Password" Margin="10,62,68,81" Foreground="Black" FontSize="14" FontWeight="Bold" Height="26" />
+            <TextBox  x:Name="tbLogin" HorizontalAlignment="Left" Height="28" Margin="101,20,0,0" TextWrapping="Wrap" 
+                  VerticalAlignment="Top" Width="184" Foreground="#FF1B1B1B" Background="#00FFFFFE" 
                   Cursor=""/>
-        <PasswordBox x:Name="tbPassword"  HorizontalAlignment="Left" Height="23" Margin="-69.268,62,0,0"  VerticalAlignment="Top" Width="183.169" IsHitTestVisible="True" 
-                     Grid.Column="1" ToolTip="Type your password here" GotMouseCapture="tbPassword_GotMouseCapture"/>
-        <Button x:Name="btnLoginOK" Height="25" Width="50" HorizontalAlignment="Right" Margin="0,0,32,10" VerticalAlignment="Bottom" Content="OK" IsDefault="True"
-                Click="btnLoginOK_Click" Grid.Column="1" Style="{StaticResource StyledButton}" Foreground="Black"/>
-        <Button x:Name="btnLoginCancel" Height="25" Margin="118,0,105,10" VerticalAlignment="Bottom" Content="Cancel" IsCancel="True"
-                Click="btnLoginCancel_Click" Grid.ColumnSpan="2" Style="{StaticResource StyledButton}"/>
-        <Label x:Name="lblLoginError" Content="Incorrect login or password." HorizontalAlignment="Left" Margin="-69.268,90,0,0" VerticalAlignment="Top" Width="215" Grid.Column="1" Background="#00000000" Foreground="Red" FontWeight="Bold"
+            <PasswordBox x:Name="tbPassword"  HorizontalAlignment="Left" Height="29" Margin="101,56,0,0"  VerticalAlignment="Top" Width="183" IsHitTestVisible="True" 
+                     ToolTip="Type your password here" GotMouseCapture="tbPassword_GotMouseCapture"/>
+            <Button x:Name="btnLoginOK" Height="25" Width="50" HorizontalAlignment="Right" Margin="0,0,32,10" VerticalAlignment="Bottom" Content="OK" IsDefault="True"
+                Click="btnLoginOK_Click"/>
+            <Button x:Name="btnLoginCancel" Height="25" Margin="118,0,105,10" VerticalAlignment="Bottom" Content="Cancel" IsCancel="True"
+                Click="btnLoginCancel_Click"/>
+            <Label x:Name="lblLoginError" Content="Incorrect login or password." HorizontalAlignment="Left" Margin="101,93,0,0" VerticalAlignment="Top" Width="199" Background="#00000000" Foreground="Red" FontWeight="Bold"
                Visibility="Hidden"/>
-        <!--<CheckBox x:Name="cbRememberMe" Content="Remember Me" HorizontalAlignment="Right" Margin="0,0,-28.604,52.919" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment"/>-->
-    </Grid>
+            <!--<CheckBox x:Name="cbRememberMe" Content="Remember Me" HorizontalAlignment="Right" Margin="0,0,-28.604,52.919" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment"/>-->
+        </Grid>
+    </Border>
 </Window>

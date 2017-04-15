@@ -145,5 +145,15 @@ namespace Biblioteka
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_upgraddiagrams");
         }
+    
+        [DbFunction("LibraryEntities", "GetRentedBooks")]
+        public virtual IQueryable<GetRentedBooks_Result> GetRentedBooks(Nullable<int> idCard)
+        {
+            var idCardParameter = idCard.HasValue ?
+                new ObjectParameter("idCard", idCard) :
+                new ObjectParameter("idCard", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetRentedBooks_Result>("[LibraryEntities].[GetRentedBooks](@idCard)", idCardParameter);
+        }
     }
 }

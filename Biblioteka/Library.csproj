@@ -66,14 +66,19 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Expression.Effects, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -99,6 +104,9 @@
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Dostępna_Kopia.cs">
+      <DependentUpon>LibraryModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetRentedBooks_Result.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Karta.cs">
@@ -155,6 +163,7 @@
     <Compile Include="sysdiagrams.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="UIChecker.cs" />
     <Compile Include="WaitCursor.cs" />
     <Compile Include="Wydawca.cs">
       <DependentUpon>LibraryModel.tt</DependentUpon>
@@ -249,7 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Biblioteka_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>Biblioteka.mdf</DependentUpon>
     </Content>
     <Resource Include="Icon.ico" />
@@ -266,12 +275,13 @@
     <Resource Include="Resources\Icon.ico" />
     <Resource Include="LICENSE.txt" />
     <Content Include="Biblioteka.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\wrench.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

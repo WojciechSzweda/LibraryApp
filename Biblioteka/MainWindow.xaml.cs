@@ -12,9 +12,10 @@ namespace Biblioteka
     /// </summary>
     public partial class MainWindow : Window
     {
+        
 
         Regex regexNumbers = new Regex("[^0-9]+");
-        Regex regexNumbersAndMinus = new Regex("[^0-9]+");
+        Regex regexNumbersAndMinus = new Regex("[^0-9-]+");
 
         LoginWindow loginWnd;
 
@@ -22,6 +23,8 @@ namespace Biblioteka
         public MainWindow()
         {
             InitializeComponent();
+            DataBaseContext.ErrorMessageBoxEvent += new EventHandler<CustomEventArgs>(ShowErrorMessageBox);
+            DataBaseContext.InfoMessageBoxEvent += new EventHandler<CustomEventArgs>(ShowInfoMessageBox);
         }
 
         private void btnSetting_Click(object sender, RoutedEventArgs e)
@@ -29,9 +32,9 @@ namespace Biblioteka
             new Settings().Show();
         }
 
-        private void btnShow_Click(object sender, RoutedEventArgs e)
+        private void btnShowRentedBooks_Click(object sender, RoutedEventArgs e)
         {
-            DataBaseContext.ShowRentedBooks(tbNrCard, tbError, dataGrid);
+            dgRentedBooks.ItemsSource = DataBaseContext.ShowRentedBooks(tbNrCard.Text);
         }
 
 
@@ -54,12 +57,13 @@ namespace Biblioteka
 
         private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
-            DataBaseContext.Registration(tbRegisterError, tbFName, tbLName, tbPhoneNr, tbPCode, tbCity, tbHouseNr, tbStreet, tbApartNr);
+            DataBaseContext.Registration(tbFName.Text, tbLName.Text, tbPhoneNr.Text, tbPCode.Text, tbCity.Text, tbStreet.Text, tbHouseNr.Text, tbApartNr.Text);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoginScreen();
+            
         }
 
         private void LoginScreen()
@@ -69,6 +73,16 @@ namespace Biblioteka
             loginWnd.ShowDialog();
             this.IsEnabled = true;
 
+        }
+
+        void ShowInfoMessageBox(object sender, CustomEventArgs e)
+        {
+            MessageBox.Show(e.MessageText, e.Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        void ShowErrorMessageBox(object sender, CustomEventArgs e)
+        {
+            MessageBox.Show(e.MessageText, e.Caption, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
 
@@ -267,7 +281,7 @@ namespace Biblioteka
 
         private void btnShowCopyInfo_Click(object sender, RoutedEventArgs e)
         {
-            DataBaseContext.ShowBookCopyInfo(tbBRcopyID, dgShowCopyInfo);
+            dgShowCopyInfo.ItemsSource = DataBaseContext.ShowBookCopyInfo(tbBRcopyID.Text);
         }
     }
 }

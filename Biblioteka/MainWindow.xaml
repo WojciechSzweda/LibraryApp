@@ -5,7 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Biblioteka"
         mc:Ignorable="d"
-        Title="Library" Height="500" Width="500" Loaded="Window_Loaded" IsEnabled="False" WindowStartupLocation="CenterScreen" 
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        
+        Title="Library" Height="441" Width="455" Loaded="Window_Loaded" IsEnabled="False" WindowStartupLocation="CenterScreen" 
     Left="300" Top="200" MinWidth="500" MinHeight="500">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -18,44 +28,60 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Height="auto" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
-            <Button  Name="btnSetting" Width="49" HorizontalAlignment="Right" Margin="0,10,10,0" FontSize="12" Click="btnSetting_Click" >
+            <Button  Name="btnSetting" Style="{DynamicResource MaterialDesignFloatingActionButton}" Width="31" HorizontalAlignment="Right" Margin="0,10,10,0" FontSize="12" Click="btnSetting_Click" Height="Auto" >
                 <StackPanel VerticalAlignment="Stretch">
-                    <Image Source="Resources/wrench.png" VerticalAlignment="Stretch" Height="25" Width="35" />
+                    <materialDesign:PackIcon Kind="Settings" />
+                    <!--<Image Source="Resources/wrench.png" VerticalAlignment="Stretch" Height="25" Width="35" />-->
                 </StackPanel>
 
             </Button>
         </Grid>
         <TabControl x:Name="tabControl" Grid.Row="1" HorizontalAlignment="Stretch" Height="auto" Margin="0" VerticalAlignment="Stretch" Width="auto" Grid.ColumnSpan="3" Background="#FFF9F9F9">
-            
+
             <TabItem Header="Card">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="75"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="4*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <TextBlock x:Name="tbError" HorizontalAlignment="Left" Margin="182,0,0,0" TextWrapping="WrapWithOverflow" Text="" VerticalAlignment="Top" Height="auto" Width="auto"/>
-                        <Button x:Name="btnShow" Content="Show" HorizontalAlignment="Left" Margin="102,45,0,0" VerticalAlignment="Top" Width="56" Click="btnShow_Click"/>
-                        <TextBox x:Name="tbNrCard" PreviewTextInput="tbNrCard_PreviewTextInput" HorizontalAlignment="Left" Height="28" Margin="102,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="56" BorderBrush="#FFABADB3"/>
-                        <Label x:Name="lblNrCard" Content="Card ID:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="87" Height="28" VerticalContentAlignment="Center" HorizontalContentAlignment="Right"/>
-
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Label x:Name="lblNrCard" Grid.Row="0" Grid.Column="0" Content="Card ID:" 
+                                   Margin="0,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch"/>
+                            <TextBox x:Name="tbNrCard" Grid.Row="0" Grid.Column="1" PreviewTextInput="tbNrCard_PreviewTextInput" HorizontalContentAlignment="Center"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="28" Margin="0,7,0,0" TextWrapping="Wrap" Text="" BorderBrush="#FFABADB3"/>
+                            <Button x:Name="btnShowRentedBooks" Grid.Row="1" Grid.Column="1"  Content="Show" 
+                                     VerticalAlignment="Center" HorizontalAlignment="Stretch"  Click="btnShowRentedBooks_Click" />
+                            <!--<TextBlock x:Name="tbError" Grid.RowSpan="2" Grid.Column="2"  Style="{StaticResource MaterialDesignDisplay1TextBlock}"  FontSize="8"
+                                       HorizontalAlignment="Stretch" Margin="0" TextWrapping="WrapWithOverflow" Text="" VerticalAlignment="Stretch"/>-->
+                        </Grid>
                     </Grid>
                     <Grid Grid.Row="1">
-                        <DataGrid  x:Name="dataGrid" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" Height="auto" Width="auto" IsReadOnly="True" AutoGenerateColumns="True" >
-                            <!--<DataGrid.Columns>
-                                <DataGridTextColumn Header="Tytuł" Binding="{Binding Title}" />
-                                <DataGridTextColumn Header="Data Wypozyczenia" Binding="{Binding DateRent}" />
-                                <DataGridTextColumn Header="Wypożyczenie do" Binding="{Binding DateToReturn}" />
-                                <DataGridTextColumn Header="Data Zwrotu" Binding="{Binding DateReturn}" />
-                                -->
-                            <!--<DataGridTemplateColumn Header="Stan">
+                        <DataGrid  x:Name="dgRentedBooks" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" Height="auto" Width="auto" IsReadOnly="True" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
+                                <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+                                <DataGridTextColumn Header="Rent Date" Binding="{Binding Rent_Date}" />
+                                <DataGridTextColumn Header="Rent Until" Binding="{Binding Rent_Until}" />
+                                <DataGridTextColumn Header="Return Date" Binding="{Binding Return_Date}" />
+
+                                <!--<DataGridTemplateColumn Header="Stan">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox Text="" Name="Stan" PreviewTextInput="Stan_PreviewTextInput"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>-->
-                            <!--
+
                                 <DataGridTemplateColumn Header="Update">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -64,52 +90,93 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                            </DataGrid.Columns>-->
+                            </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
 
                 </Grid>
             </TabItem>
             <TabItem Header="Registration">
-                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Center" Margin="0" Background="#FFCDC8C8" >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0"  >
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="300"/>
+                        <RowDefinition Height="4*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                        <Label Content="First Name" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88.637"/>
-                        <Label Content="Last Name" HorizontalAlignment="Left" Margin="0,30.96,0,0" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment" Width="88.637"/>
-                        <Label Content="Phone Number" HorizontalAlignment="Left" Margin="0,61.92,0,0" VerticalAlignment="Top"/>
-                        <Label Content="City" HorizontalAlignment="Left" Margin="0,92.88,0,0" VerticalAlignment="Top" Width="88.637"/>
-                        <Label Content="Postal Code" HorizontalAlignment="Left" Margin="0,123.84,0,0" d:LayoutOverrides="HorizontalAlignment" VerticalAlignment="Top"/>
-                        <Label Content="Street Adress" HorizontalAlignment="Left" Margin="0,154.8,0,0" VerticalAlignment="Top"/>
-                        <Label Content="House Number" HorizontalAlignment="Left" Margin="0,186,0,0" VerticalAlignment="Top"/>
-                        <Label Content="Apartment Number" Margin="194.496,188.72,162.712,0" d:LayoutOverrides="Width" VerticalAlignment="Top"/>
-                        <TextBox x:Name="tbFName" Height="25.96" Margin="105,0,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                        <TextBox x:Name="tbLName" HorizontalAlignment="Left" Height="23" Margin="105,33.92,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="354.712"/>
-                        <TextBox x:Name="tbPhoneNr" Height="23" Margin="105,64.88,11,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
-                        <TextBox x:Name="tbCity" HorizontalAlignment="Left" Margin="105,95.84,0,0" TextWrapping="Wrap" Text="" Width="354.712" Height="23" VerticalAlignment="Top"/>
-                        <TextBox x:Name="tbPCode" PreviewTextInput="tbPCode_PreviewTextInput" HorizontalAlignment="Left" Margin="105,126.8,0,0" TextWrapping="Wrap" Text="" Width="89" Height="23" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment"/>
-                        <TextBox x:Name="tbStreet" HorizontalAlignment="Left" Height="23" Margin="105,157.76,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="354.712"/>
-                        <TextBox x:Name="tbHouseNr" HorizontalAlignment="Left" Margin="105,188.72,0,0" TextWrapping="Wrap" Text="" Width="57.21" Height="23" VerticalAlignment="Top"/>
-                        <TextBox x:Name="tbApartNr" HorizontalAlignment="Left" Margin="326,191.68,0,0" TextWrapping="Wrap" Text="" Width="59" Height="23" VerticalAlignment="Top"/>
-                        <Button x:Name="btnRegister" Content="Register" HorizontalAlignment="Left" Margin="366,250,0,0" VerticalAlignment="Top" Width="75" Click="btnRegister_Click"/>
-
+                    <Grid Grid.Row="0" Margin="0,20,20,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="4*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="First Name" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="tbFName" Grid.Column="1" Grid.Row="0" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"  />
+                        <Label Content="Last Name" Grid.Column="0"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="tbLName" Grid.Column="1"  Grid.Row="1" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        <Label Content="Phone Number" Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="tbPhoneNr" Grid.Column="1"  Grid.Row="2" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        <Label Content="City" Grid.Column="0"  Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                        <Label Content="Postal Code" Grid.Column="0"  Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                        <Label Content="Street Adress" Grid.Column="0"  Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="tbCity" Grid.Column="1"  Grid.Row="3" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        <TextBox x:Name="tbPCode" PreviewTextInput="tbPCode_PreviewTextInput" Grid.Column="1"  Grid.Row="4" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        <TextBox x:Name="tbStreet" Grid.Column="1"  Grid.Row="5" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        <Grid Grid.Row="6" Grid.ColumnSpan="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.5*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Content="House Number"  Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                            <TextBox x:Name="tbHouseNr" Grid.Column="1"  Grid.Row="6" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <Label Content="Apartment Number"  Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Stretch" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                            <TextBox x:Name="tbApartNr" Grid.Column="3"  Grid.Row="6" Margin="0" Text="" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        </Grid>
+                        <Grid Grid.Row="8" Grid.ColumnSpan="2" Margin="0,2,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="1.5*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="btnRegister" Grid.Column="2" Content="Register" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch"  Click="btnRegister_Click"/>
+                        </Grid>
                     </Grid>
-                    <Grid Grid.Row="1" VerticalAlignment="Stretch">
+                    <Grid Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <TextBlock x:Name="tbRegisterError" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text=" " Margin="10" FontSize="10"  VerticalAlignment="Stretch"/>
                     </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Book Renting">
                 <Grid>
-                    <Label Content="Card ID:" Margin="10,49,408,316"/>
-                    <TextBox Name="tbBRcardID" Text="" Margin="113,49,302,316" />
-                    <Label Content="Book Copy ID:" VerticalContentAlignment="Center" Margin="10,110,373,250" />
-                    <TextBox Name="tbBRcopyID" Text="" Margin="113,110,302,250" />
-                    <DataGrid x:Name="dgShowCopyInfo" HorizontalAlignment="Left" Margin="10,197,0,0" VerticalAlignment="Top" Height="77" Width="399"/>
-                    <Button x:Name="btnRentBook" Content="Rent" HorizontalAlignment="Left" Margin="44,279,0,0" VerticalAlignment="Top" Width="69" Click="btnRentBook_Click"/>
-                    <Button x:Name="btnShowCopyInfo" Content="Show Info" HorizontalAlignment="Left" Margin="227,118,0,0" VerticalAlignment="Top" Width="74" Height="23" Click="btnShowCopyInfo_Click" RenderTransformOrigin="1.068,0.478"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Card ID:" Grid.Row="0" Grid.Column="0" Margin="0" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBox Name="tbBRcardID" Grid.Row="0" Grid.Column="1" Text="" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                    <Label Content="Book Copy ID:" Grid.Row="1" Grid.Column="0" VerticalContentAlignment="Center" Margin="0" HorizontalAlignment="Right"/>
+                    <TextBox Name="tbBRcopyID" Grid.Row="1" Grid.Column="1" Text="" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                    <DataGrid x:Name="dgShowCopyInfo" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0"/>
+                    <Button x:Name="btnRentBook" Grid.Row="3" Grid.Column="1" Content="Rent" Click="btnRentBook_Click"/>
+                    <Button x:Name="btnShowCopyInfo" Grid.Row="1" Grid.Column="2" Content="Show Info" Click="btnShowCopyInfo_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
