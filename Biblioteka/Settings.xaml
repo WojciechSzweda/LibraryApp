@@ -6,12 +6,30 @@
         xmlns:local="clr-namespace:Biblioteka"
         mc:Ignorable="d"
         Title="Settings" Height="211.388" Width="410.951" WindowStartupLocation="CenterScreen" 
-    Left="400" Top="300">
+    Left="400" Top="300"
+        Loaded="Window_Loaded" Topmost="True">
     <Grid>
-        <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Left" Margin="301,107,0,0" VerticalAlignment="Top" Width="75" Click="btnOK_Click"/>
-        <Button x:Name="btnCancel" Content="Anuluj" HorizontalAlignment="Left" Margin="199,107,0,0" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
-        <Label x:Name="label" Content="WORK IN PROGRESS" HorizontalAlignment="Left" Margin="107,36,0,0" VerticalAlignment="Top" Height="57" Width="252"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" >
+                <CheckBox x:Name="cbIsFullscreen" Content="Fullscreen" />
+            </StackPanel>
 
+        </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" >
+            <Button x:Name="btnOK"  Content="Apply" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Width="75" Click="btnOK_Click"/>
+            <Separator Width="20" />
+            <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
+        </StackPanel>
 
     </Grid>
 </Window>

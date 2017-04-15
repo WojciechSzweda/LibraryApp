@@ -22,5 +22,20 @@ namespace Biblioteka.Properties {
                 return defaultInstance;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("true")]
+        public bool Fullscreen
+        {
+            get
+            {
+                return ((bool)(this["Fullscreen"]));
+            }
+            set
+            {
+                this["Fullscreen"] = value;
+            }
+        }
     }
 }

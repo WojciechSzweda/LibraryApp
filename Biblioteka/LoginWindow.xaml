@@ -74,7 +74,7 @@
                   VerticalAlignment="Top" Width="184" Foreground="#FF1B1B1B" Background="#00FFFFFE" 
                   Cursor=""/>
             <PasswordBox x:Name="tbPassword"  HorizontalAlignment="Left" Height="29" Margin="101,56,0,0"  VerticalAlignment="Top" Width="183" IsHitTestVisible="True" 
-                     ToolTip="Type your password here" GotMouseCapture="tbPassword_GotMouseCapture"/>
+                     ToolTip="Type your password here" GotMouseCapture="tbPassword_GotMouseCapture" Background="Transparent"/>
             <Button x:Name="btnLoginOK" Height="25" Width="50" HorizontalAlignment="Right" Margin="0,0,32,10" VerticalAlignment="Bottom" Content="OK" IsDefault="True"
                 Click="btnLoginOK_Click"/>
             <Button x:Name="btnLoginCancel" Height="25" Margin="118,0,105,10" VerticalAlignment="Bottom" Content="Cancel" IsCancel="True"

@@ -19,6 +19,7 @@ namespace Biblioteka
 
         LoginWindow loginWnd;
 
+        
 
         public MainWindow()
         {
@@ -29,7 +30,9 @@ namespace Biblioteka
 
         private void btnSetting_Click(object sender, RoutedEventArgs e)
         {
-            new Settings().Show();
+            var settingWnd = new Settings();
+            settingWnd.MaximizeEvent += new EventHandler<CustomEventArgs>(SetWindowState);
+            settingWnd.Show();
         }
 
         private void btnShowRentedBooks_Click(object sender, RoutedEventArgs e)
@@ -62,6 +65,7 @@ namespace Biblioteka
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            SetWindowState(this, new CustomEventArgs());
             LoginScreen();
             
         }
@@ -283,5 +287,22 @@ namespace Biblioteka
         {
             dgShowCopyInfo.ItemsSource = DataBaseContext.ShowBookCopyInfo(tbBRcopyID.Text);
         }
+
+        private void Maximize(object sender, CustomEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
+            else
+            this.WindowState = WindowState.Maximized;
+        }
+
+        private void SetWindowState(object sender, CustomEventArgs e)
+        {
+            if (Properties.Settings.Default.Fullscreen)
+                this.WindowState = WindowState.Maximized;
+            else
+                this.WindowState = WindowState.Normal;
+        }
+
     }
 }
