@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Biblioteka
 {
@@ -23,49 +21,61 @@ namespace Biblioteka
         }
 
 
+        public class GetRentedBooks_Result
+        {
+            public int ID { get; set; }
+            public string Title { get; set; }
+            public DateTime RentDate { get; set; }
+            public DateTime RentUntil { get; set; }
+            public DateTime? ReturnDate { get; set; }
+        }
+
         static public List<GetRentedBooks_Result> ShowRentedBooks(string NrCardText)
         {
             var cardNr = GetCardID(NrCardText);
             if (cardNr == 0)
                 return null;
 
-            using (var context = new LibraryEntities())
+            using (var context = new LibraryModel())
             {
-                return context.GetRentedBooks(cardNr).ToList();
+                var query = from rent in context.Rent
+                            where rent.ID_Card == cardNr
+                            select new GetRentedBooks_Result() { ID = rent.ID, ReturnDate = rent.Return.Return_Date, RentDate = rent.Rent_Date, RentUntil = rent.Expected_Return_Date, Title = rent.Copy.Book.Title };
+                return query.ToList();
             }
         }
 
-        static public void Registration(string FirstName, string LastName, string PhoneNumber, string PostalCode, string City, string Street, string HouseNr, string ApartmentNr)
+        static public void Registration(string _FirstName, string _LastName, string _PhoneNumber, string _PostalCode, string _City, string _Street, string _HouseNr, string _ApartmentNr)
         {
             try
             {
-                using (var context = new LibraryEntities())
+                using (var context = new LibraryModel())
                 {
-                    var card = new Karta
+                    var card = new Card
                     {
-                        Imię = FirstName,
-                        Nazwisko = LastName,
-                        Nr_kontaktowy = PhoneNumber,
-                        Miejscowość = City,
-                        Kod_pocztowy = PostalCode,
-                        Ulica = Street,
-                        Nr_domu = HouseNr,
-                        Nr_mieszkania = ApartmentNr,
-                        Stan = 1
+                        First_Name = _FirstName,
+                        Last_Name = _LastName,
+                        Phone_Number = _PhoneNumber,
+                        City = _City,
+                        Postal_Code = _PostalCode,
+                        Street = _Street,
+                        House_Number = _HouseNr,
+                        Apartment_Nuber = _ApartmentNr,
+                        State = 1
                     };
 
-                    var fieldsList = UIChecker.RegisterFieldsDictionary(FirstName, LastName, PhoneNumber, PostalCode, City, Street, HouseNr);
+                    var fieldsList = UIChecker.RegisterFieldsDictionary(_FirstName, _LastName, _PhoneNumber, _PostalCode, _City, _Street, _HouseNr);
                     if (UIChecker.CheckForEmptyFields(fieldsList))
                     {
                         ErrorMessageBoxEvent(null, new CustomEventArgs { MessageText = UIChecker.GetEmptyFieldsName(fieldsList) });
                         return;
                     }
-                    context.Karta.Add(card);
+                    context.Card.Add(card);
                     context.SaveChanges();
                     InfoMessageBoxEvent(null, new CustomEventArgs { MessageText = $"Registration Successful\nNew ID: {card.ID}", Caption = "Success" });
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ErrorMessageBoxEvent(null, new CustomEventArgs { MessageText = "Unknown error occurred", Caption = "ERROR" });
             }
@@ -84,12 +94,12 @@ namespace Biblioteka
             int copyID;
             if (int.TryParse(tbCopyID, out copyID))
             {
-                using (var context = new LibraryEntities())
+                using (var context = new LibraryModel())
                 {
-                    var copyInfo = from copy in context.Kopia
-                                   join book in context.Książka on copy.ID_Książka equals book.ID
+                    var copyInfo = from copy in context.Copy
+                                   join book in context.Book on copy.ID_Book equals book.ID
                                    where copy.ID == copyID
-                                   select new BookCopyInfo { Title = book.Tytuł, PublishDate = book.Rok_wydania, ISBN = book.ISBN, BookCopyState = copy.Stan_Książki };
+                                   select new BookCopyInfo { Title = book.Title, PublishDate = book.Release_Date, ISBN = book.ISBN, BookCopyState = copy.Book_State };
                     return copyInfo.ToList();
                 }
             }
@@ -144,4 +154,6 @@ namespace Biblioteka
         #endregion
 
     }
+
+
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
@@ -12,14 +10,14 @@ namespace Biblioteka
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+
 
         Regex regexNumbers = new Regex("[^0-9]+");
         Regex regexNumbersAndMinus = new Regex("[^0-9-]+");
 
         LoginWindow loginWnd;
 
-        
+
 
         public MainWindow()
         {
@@ -67,7 +65,7 @@ namespace Biblioteka
         {
             SetWindowState(this, new CustomEventArgs());
             LoginScreen();
-            
+
         }
 
         private void LoginScreen()
@@ -293,7 +291,7 @@ namespace Biblioteka
             if (this.WindowState == WindowState.Maximized)
                 this.WindowState = WindowState.Normal;
             else
-            this.WindowState = WindowState.Maximized;
+                this.WindowState = WindowState.Maximized;
         }
 
         private void SetWindowState(object sender, CustomEventArgs e)

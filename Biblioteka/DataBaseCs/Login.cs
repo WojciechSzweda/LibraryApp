@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Biblioteka
 {
@@ -18,17 +17,17 @@ namespace Biblioteka
 
         public static bool TryLogin(string login, string password)
         {
-                using (var context = new LibraryEntities())
-                {
-                    var userData = context.Pracownik.FirstOrDefault(x => x.Login == login);
+            using (var context = new LibraryModel())
+            {
+                var userData = context.Employee.FirstOrDefault(x => x.Login == login);
 
-                    if (userData != null)
-                        if (ValidatePassword(password, userData.Haslo))
-                        {
-                            return true;
-                        }
-                }
-                return false;
+                if (userData != null)
+                    if (ValidatePassword(password, userData.Password))
+                    {
+                        return true;
+                    }
+            }
+            return false;
         }
 
         public static string HashPassword(string password)
