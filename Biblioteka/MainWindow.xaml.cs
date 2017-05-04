@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Biblioteka
@@ -16,14 +18,21 @@ namespace Biblioteka
         Regex regexNumbersAndMinus = new Regex("[^0-9-]+");
 
         LoginWindow loginWnd;
+        ViewModel viewModel;
 
-
+        private event EventHandler<CustomEventArgs> ShowGraphEvent;
 
         public MainWindow()
         {
             InitializeComponent();
             DataBaseContext.ErrorMessageBoxEvent += new EventHandler<CustomEventArgs>(ShowErrorMessageBox);
             DataBaseContext.InfoMessageBoxEvent += new EventHandler<CustomEventArgs>(ShowInfoMessageBox);
+            ShowGraphEvent += new EventHandler<CustomEventArgs>(ClearGraph);
+            ShowGraphEvent += new EventHandler<CustomEventArgs>(ShowGraph);
+
+            viewModel = new ViewModel();
+            this.DataContext = viewModel;
+
         }
 
         private void btnSetting_Click(object sender, RoutedEventArgs e)
@@ -35,14 +44,38 @@ namespace Biblioteka
 
         private void btnShowRentedBooks_Click(object sender, RoutedEventArgs e)
         {
-            dgRentedBooks.ItemsSource = DataBaseContext.ShowRentedBooks(tbNrCard.Text);
+            ShowRentedBooks();
+        }
+
+        private async void ShowRentedBooks()
+        {
+            await Task.Run(() =>
+            {
+                var RentedBooks = DataBaseContext.ShowRentedBooks(Dispatcher.Invoke(() => tbNrCard.Text));
+                Dispatcher.Invoke(() =>
+                {
+                    dgRentedBooks.ItemsSource = RentedBooks;
+
+                    if (RentedBooks == null)
+                    {
+                        ClearGraph(this, new CustomEventArgs());
+                        return;
+                    }
+
+                    ShowGraphEvent?.Invoke(this, new CustomEventArgs());
+                });
+            });
         }
 
 
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            //int index = list.ElementAt(dataGrid.SelectedIndex).ID;
-            //Return(index);
+            var result = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Cancel)
+                return;
+
+            DataBaseContext.Return((int)(sender as Button).CommandParameter);
+            ShowRentedBooks();
         }
 
 
@@ -101,181 +134,6 @@ namespace Biblioteka
         }
 
 
-        #region oldsql
-        //private void TestConnection()
-        //{
-        //    using (new WaitCursor())
-        //    {
-        //        try
-        //        {
-        //            conn.Open();
-        //            conn.Close();
-        //        }
-        //        catch (SqlException e)
-        //        {
-        //            if (conn != null)
-        //                conn.Dispose();
-        //            tbError.Text = "Nie udało się połączyć z serwerem. Nieprawidłowa nazwa serwera lub bazy.";
-        //            btnShow.IsEnabled = false;
-        //            btnRegister.IsEnabled = false;
-        //            return;
-        //        }
-        //        btnRegister.IsEnabled = true;
-        //        btnShow.IsEnabled = true;
-        //        tbError.Text = "Połączono!";
-        //    }
-        //}
-
-        //private void RegisterCart()
-        //{
-        //    tbError2.Text = "";
-
-
-
-        //    try
-        //    {
-        //        using (SqlCommand command = new SqlCommand(@"INSERT INTO Karta (Imię, Nazwisko, Miejscowość, [Kod pocztowy], Ulica, [Nr domu], [Nr mieszkania],[Nr kontaktowy]) 
-        //                                                 OUTPUT INSERTED.ID VALUES (@imie, @nazwisko, @city, @kod, @ulica, @nrd, @nrm, @nrtel)", conn))
-        //        {
-        //            conn.Open();
-        //            command.Parameters.AddWithValue("@imie", tbImię.Text);
-        //            command.Parameters.AddWithValue("@nazwisko", tbNazwisko.Text);
-        //            command.Parameters.AddWithValue("@city", tbCity.Text);
-        //            command.Parameters.AddWithValue("@kod", tbPCode.Text);
-        //            command.Parameters.AddWithValue("@ulica", tbUlica.Text);
-        //            command.Parameters.AddWithValue("@nrd", tbNrDomu.Text);
-        //            string nrM = tbNrMiesz.Text;
-        //            if (nrM == "")
-        //            {
-        //                command.Parameters.AddWithValue("@nrm", DBNull.Value);
-        //            }
-        //            else
-        //            {
-        //                command.Parameters.AddWithValue("@nrm", nrM);
-        //            }
-        //            command.Parameters.AddWithValue("@nrtel", tbNrTel.Text);
-        //            command.ExecuteScalar();
-        //            //Int32 newId = (Int32)command.ExecuteScalar();
-        //            //return newId;
-        //            conn.Close();
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        tbError2.Text = e.Message;
-        //    }
-
-
-        //}
-
-        //private int GetStan(int index)
-        //{
-        //    int stan = 0;
-        //    var command = new SqlCommand();
-        //    var query = @"SELECT [Stan Książki].ID
-        //                  FROM Kopia
-        //                  JOIN Wypożyczenie on Kopia.ID = Wypożyczenie.ID_Kopia
-        //                  JOIN[Stan Książki] on Kopia.[Stan Książki] = [Stan Książki].ID
-        //                  WHERE Wypożyczenie.ID = " + index;
-        //    command.CommandText = query;
-        //    command.Connection = conn;
-
-        //    using (var reader = command.ExecuteReader())
-        //    {
-        //        while (reader.Read())
-        //        {
-        //            stan = reader.GetInt32(0);
-        //        }
-        //    }
-        //    return stan;
-        //}
-
-        //private int GetStanAfter(int stan)
-        //{
-        //    //DataGridRow row = dataGrid.ItemContainerGenerator.ContainerFromIndex
-        //    //     (dataGrid.SelectedIndex) as DataGridRow;
-        //    //var i = dataGrid.Columns.Single(c => c.Header.ToString() == "Stan").DisplayIndex; /// Specify your column index here.
-        //    //////EDIT
-        //    //TextBox ele = ((ContentPresenter)(dataGrid.Columns[i].GetCellContent(row))).Content as TextBox;
-        //    //if (ele.Text == "")
-        //    //{
-        //    //    ele.Text = stan.ToString();
-        //    //}
-        //    return rnd.Next(stan, 4);
-        //}
-
-        //private void Return(int index)
-        //{
-        //    string query = @"IF NOT EXISTS (SELECT * FROM Wypożyczenie 
-        //      JOIN Oddanie on Wypożyczenie.ID = Oddanie.ID_wypożyczenie
-        //      WHERE Wypożyczenie.ID = " + index + @")
-        //                     INSERT INTO Oddanie([Stan przed oddaniem],[Stan po oddaniu], ID_wypożyczenie) values (@stanPre,@stanAfter,@wypID)";
-        //    conn.Open();
-        //    SqlCommand comm = new SqlCommand();
-        //    comm.CommandText = query;
-        //    comm.Connection = conn;
-        //    int stan = GetStan(index);
-        //    comm.Parameters.AddWithValue("stanPre", stan);
-        //    comm.Parameters.AddWithValue("stanAfter", GetStanAfter(stan));
-        //    comm.Parameters.AddWithValue("wypID", Convert.ToInt32(index));
-        //    tbError.Text = index.ToString();
-        //    var updated = comm.ExecuteNonQuery();
-        //    if (updated > 0)
-        //    {
-        //        MessageBox.Show("Zaktualizowano!");
-        //    }
-        //    conn.Close();
-        //    ShowQuery();
-        //}
-
-        //public void ShowQuery()
-        //{
-        //    tbError.Text = "";
-        //    list = new List<Books>();
-        //    var tbBrush = tbNrCard.BorderBrush;
-        //    if (!int.TryParse(tbNrCard.Text, out nrKarty))
-        //    {
-        //        tbError.Text = "zle dane";
-
-        //        tbNrCard.BorderBrush = Brushes.Red;
-        //        return;
-        //    }
-        //    tbNrCard.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFABADB3");
-
-        //    var commandRead = new SqlCommand(@"SELECT Wypożyczenie.ID, Wypożyczenie.[Data wypożyczenia], Wypożyczenie.[Oczekiwana data zwrotu], Oddanie.[Data oddania], Książka.Tytuł 
-        //                                        FROM Karta 
-        //                                        JOIN Wypożyczenie on Karta.ID = Wypożyczenie.ID_Karta 
-        //                                        JOIN Kopia on Wypożyczenie.ID_Kopia = Kopia.ID 
-        //                                        JOIN Książka on Kopia.ID_Książka = Książka.ID 
-        //                                        FULL JOIN Oddanie on Wypożyczenie.ID = Oddanie.ID_wypożyczenie
-        //                                        WHERE Karta.ID = " + nrKarty, conn);
-        //    try
-        //    {
-        //        conn.Open();
-
-        //        using (var reader = commandRead.ExecuteReader())
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                object sqlDateTime = reader[3];
-        //                DateTime? dt = (sqlDateTime == System.DBNull.Value)
-        //                    ? (DateTime?)null
-        //                    : Convert.ToDateTime(sqlDateTime);
-        //                list.Add(new Books { ID = reader.GetInt32(0), Title = reader.GetString(4), DateRent = reader.GetDateTime(1), DateToReturn = reader.GetDateTime(2), DateReturn = dt });
-
-        //            }
-        //        }
-
-        //        dataGrid.ItemsSource = list;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        tbError.Text = e.Message;
-        //    }
-        //    conn.Close();
-        //}
-        #endregion
-
         private void btnRentBook_Click(object sender, RoutedEventArgs e)
         {
 
@@ -302,5 +160,30 @@ namespace Biblioteka
                 this.WindowState = WindowState.Normal;
         }
 
+        private void ShowGraph(object sender, CustomEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                var GraphData = DataBaseContext.GetDataForGraph(Dispatcher.Invoke(() => tbNrCard.Text));
+                Dispatcher.Invoke(() => viewModel.Add(GraphData));
+            });
+        }
+
+        private void ClearGraph(object sender, CustomEventArgs e)
+        {
+            viewModel.ValueList.Clear();
+        }
+
+        private void btnShowStatsGraph_Checked(object sender, RoutedEventArgs e)
+        {
+            //ShowGraphEvent += new EventHandler<CustomEventArgs>(ShowGraph);
+            lineChart.Visibility = Visibility.Visible;
+        }
+
+        private void btnShowStatsGraph_Unchecked(object sender, RoutedEventArgs e)
+        {
+            //ShowGraphEvent -= new EventHandler<CustomEventArgs>(ShowGraph);
+            lineChart.Visibility = Visibility.Collapsed;
+        }
     }
 }

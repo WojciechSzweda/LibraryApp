@@ -1,4 +1,5 @@
 ﻿<Window x:Class="Biblioteka.MainWindow"
+        
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +7,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Biblioteka"
         mc:Ignorable="d"
-        
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -16,14 +18,15 @@
         Background="#FFB5BEDC"
         FontFamily="{DynamicResource MaterialDesignFont}"
         
-        Title="Library" Height="441" Width="455" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" 
+        Title="Library" Height="475" Width="661" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" 
     Left="300" Top="200" MinWidth="500" MinHeight="500" IsEnabled="False">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <dragablz:TabablzControl Margin="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TabControl Margin="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <!--<dragablz:TabablzControl.InterTabController>
                 <dragablz:InterTabController />
             </dragablz:TabablzControl.InterTabController>-->
@@ -31,33 +34,56 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
+                    
+                    
                     <Grid Grid.Row="0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="2*"/>
-                            </Grid.ColumnDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Viewbox>
+                            <Label x:Name="lblNrCard" Grid.Row="0" Grid.Column="0" Content="Card ID:" 
+                                   Margin="0,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch"/>
+                        </Viewbox>
+                        <TextBox x:Name="tbNrCard" Grid.Row="0" Grid.Column="1" PreviewTextInput="tbNrCard_PreviewTextInput" HorizontalContentAlignment="Center"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="28" Margin="0,7,0,0" TextWrapping="Wrap" Text="" BorderBrush="#FFABADB3"/>
+                        <Button x:Name="btnShowRentedBooks" Grid.Row="1" Grid.Column="1"  Content="Show" 
+                                     VerticalAlignment="Center" HorizontalAlignment="Stretch"  Click="btnShowRentedBooks_Click" />
+                        <Grid Grid.Row="1" Grid.Column="3">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Viewbox>
-                                <Label x:Name="lblNrCard" Grid.Row="0" Grid.Column="0" Content="Card ID:" 
-                                   Margin="0,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch"/>
+                                <Label Content="Show Graph" Grid.Row="0" VerticalAlignment="Center" />
                             </Viewbox>
-                            <TextBox x:Name="tbNrCard" Grid.Row="0" Grid.Column="1" PreviewTextInput="tbNrCard_PreviewTextInput" HorizontalContentAlignment="Center"
-                                     HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="28" Margin="0,7,0,0" TextWrapping="Wrap" Text="" BorderBrush="#FFABADB3"/>
-                            <Button x:Name="btnShowRentedBooks" Grid.Row="1" Grid.Column="1"  Content="Show" 
-                                     VerticalAlignment="Center" HorizontalAlignment="Stretch"  Click="btnShowRentedBooks_Click" />
-                            <!--<TextBlock x:Name="tbError" Grid.RowSpan="2" Grid.Column="2"  Style="{StaticResource MaterialDesignDisplay1TextBlock}"  FontSize="8"
-                                       HorizontalAlignment="Stretch" Margin="0" TextWrapping="WrapWithOverflow" Text="" VerticalAlignment="Stretch"/>-->
+                            <ToggleButton x:Name="btnShowStatsGraph" Grid.Row="1" Style="{DynamicResource MaterialDesignSwitchToggleButton}"
+                                          VerticalAlignment="Center" HorizontalAlignment="Stretch" Checked="btnShowStatsGraph_Checked" Unchecked="btnShowStatsGraph_Unchecked" />
                         </Grid>
+                        <!--<TextBlock x:Name="tbError" Grid.RowSpan="2" Grid.Column="2"  Style="{StaticResource MaterialDesignDisplay1TextBlock}"  FontSize="8"
+                                       HorizontalAlignment="Stretch" Margin="0" TextWrapping="WrapWithOverflow" Text="" VerticalAlignment="Stretch"/>-->
                     </Grid>
                     <Grid Grid.Row="1">
-                        <DataGrid  x:Name="dgRentedBooks" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" Height="auto" Width="auto" IsReadOnly="True" AutoGenerateColumns="False" Background="#00FAFAFA">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=btnShowStatsGraph, Path=IsChecked}" Value="False">
+                                        <Setter Property="Grid.RowSpan" Value="3"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <DataGrid  x:Name="dgRentedBooks" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" IsReadOnly="True" AutoGenerateColumns="False" Background="#00FAFAFA">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
                                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
@@ -84,8 +110,20 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
-
+                    <Grid Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <DVC:Chart Name="lineChart" Title="Rent Graph" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5" IsEnabled="False" BorderThickness="0" Visibility="Collapsed">
+                            <DVC:Chart.LegendStyle>
+                                <Style TargetType="Control">
+                                    <Setter Property="Width" Value="0" />
+                                    <Setter Property="Height" Value="0" />
+                                </Style>
+                            </DVC:Chart.LegendStyle>
+                            <DVC:LineSeries  DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding ValueList}" IsSelectionEnabled="False"/>
+                        </DVC:Chart>
+                    </Grid>
                 </Grid>
+
+
             </TabItem>
             <TabItem Header="Registration">
                 <TabItem.Background>
@@ -176,7 +214,7 @@
                     <Button x:Name="btnShowCopyInfo" Grid.Row="1" Grid.Column="2" Content="Show Info" Click="btnShowCopyInfo_Click"/>
                 </Grid>
             </TabItem>
-        </dragablz:TabablzControl>
+        </TabControl>
         <Grid Grid.Row="0" Height="auto" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
             <Button  x:Name="btnSetting" Style="{DynamicResource MaterialDesignFloatingActionButton}" Width="31" HorizontalAlignment="Right" Margin="0,10,10,10" FontSize="12" Click="btnSetting_Click" Height="Auto" >
                 <StackPanel VerticalAlignment="Stretch">

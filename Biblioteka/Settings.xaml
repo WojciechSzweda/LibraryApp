@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" >
-                <CheckBox x:Name="cbIsFullscreen" Content="Fullscreen" />
+                <CheckBox x:Name="cbIsFullscreen" Content="Maximize on Startup" />
             </StackPanel>
 
         </Grid>

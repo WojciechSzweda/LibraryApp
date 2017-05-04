@@ -22,26 +22,8 @@
 
     <Window.Resources>
 
-        <Storyboard x:Key="OnLoginClick">
-            <!--<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbPassword">
-                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="Red"/>
-            </ColorAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="tbPassword">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="2"/>
-            </ThicknessAnimationUsingKeyFrames>
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbLogin">
-                <EasingColorKeyFrame KeyTime="0:0:0.2" Value="Red"/>
-            </ColorAnimationUsingKeyFrames>
-            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderThickness)" Storyboard.TargetName="tbLogin">
-                <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="2"/>
-            </ThicknessAnimationUsingKeyFrames>-->
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lblLoginError">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lblLoginError">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Visible}"/>
-            </ObjectAnimationUsingKeyFrames>
-        </Storyboard>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        
         <Storyboard x:Key="OnTextChangedLoginOrPassword">
             <!--<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="tbLogin">
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFB2B5BB"/>
@@ -50,37 +32,44 @@
                 <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFB8BAC1"/>
             </ColorAnimationUsingKeyFrames>-->
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="lblLoginError">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="{x:Static Visibility.Hidden}"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="btnLoginOK">
-            <BeginStoryboard x:Name="OnClick1_BeginStoryboard" Storyboard="{StaticResource OnLoginClick}"/>
-        </EventTrigger>
+    <!--<Window.Triggers>
         <EventTrigger RoutedEvent="TextBoxBase.TextChanged" SourceName="tbLogin">
             <BeginStoryboard x:Name="OnTextChangedLogin_BeginStoryboard" Storyboard="{StaticResource OnTextChangedLoginOrPassword}"/>
         </EventTrigger>
         <EventTrigger RoutedEvent="PasswordBox.PasswordChanged" SourceName="tbPassword">
             <BeginStoryboard x:Name="OnTextChangedPassword_BeginStoryboard1" Storyboard="{StaticResource OnTextChangedLoginOrPassword}"/>
         </EventTrigger>
-    </Window.Triggers>
+    </Window.Triggers>-->
 
     <Border CornerRadius="30" BorderBrush="DarkSlateBlue" BorderThickness="2" Background="#FFD1D0D0">
-        <Grid  >
+        <Grid>
             <Label Content="Login" Margin="10,25,74,118" Foreground="Black" FontSize="14" FontWeight="Bold" Height="26"/>
             <Label Content="Password" Margin="10,62,68,81" Foreground="Black" FontSize="14" FontWeight="Bold" Height="26" />
             <TextBox  x:Name="tbLogin" HorizontalAlignment="Left" Height="28" Margin="101,20,0,0" TextWrapping="Wrap" 
-                  VerticalAlignment="Top" Width="184" Foreground="#FF1B1B1B" Background="#00FFFFFE" 
+                  VerticalAlignment="Top" Width="184" Foreground="#FF1B1B1B" Background="#00FFFFFE" TextChanged="tb_TextChanged"
                   Cursor=""/>
-            <PasswordBox x:Name="tbPassword"  HorizontalAlignment="Left" Height="29" Margin="101,56,0,0"  VerticalAlignment="Top" Width="183" IsHitTestVisible="True" 
+            <PasswordBox x:Name="tbPassword"  HorizontalAlignment="Left" Height="29" Margin="101,56,0,0"  VerticalAlignment="Top" Width="183" IsHitTestVisible="True" PasswordChanged="tbPassword_PasswordChanged"
                      ToolTip="Type your password here" GotMouseCapture="tbPassword_GotMouseCapture" Background="Transparent"/>
             <Button x:Name="btnLoginOK" Height="25" Width="50" HorizontalAlignment="Right" Margin="0,0,32,10" VerticalAlignment="Bottom" Content="OK" IsDefault="True"
                 Click="btnLoginOK_Click"/>
             <Button x:Name="btnLoginCancel" Height="25" Margin="118,0,105,10" VerticalAlignment="Bottom" Content="Cancel" IsCancel="True"
                 Click="btnLoginCancel_Click"/>
             <Label x:Name="lblLoginError" Content="Incorrect login or password." HorizontalAlignment="Left" Margin="101,93,0,0" VerticalAlignment="Top" Width="199" Background="#00000000" Foreground="Red" FontWeight="Bold"
-               Visibility="Hidden"/>
+               Visibility="{Binding Path=ErrorVisibility, Converter={StaticResource BoolToVisConverter} }"/>
+            <Image x:Name="WaitSpyro" Source="Resources/WaitSpyro.png" Height="40" Width="40" Margin="36,104,236,21" RenderTransformOrigin="0.5,0.5" >
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="1"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
             <!--<CheckBox x:Name="cbRememberMe" Content="Remember Me" HorizontalAlignment="Right" Margin="0,0,-28.604,52.919" VerticalAlignment="Bottom" d:LayoutOverrides="HorizontalAlignment"/>-->
         </Grid>
     </Border>

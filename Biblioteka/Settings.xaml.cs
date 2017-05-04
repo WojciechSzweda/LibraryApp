@@ -36,7 +36,7 @@ namespace Biblioteka
         {
             Properties.Settings.Default.Fullscreen = (bool)cbIsFullscreen.IsChecked;
             Properties.Settings.Default.Save();
-            MaximizeEvent(this, new CustomEventArgs());
+            //MaximizeEvent(this, new CustomEventArgs());
             Close();
         }
 

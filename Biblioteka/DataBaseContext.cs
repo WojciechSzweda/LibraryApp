@@ -1,18 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 
 namespace Biblioteka
 {
+
+    public class RentedBooks
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+        public DateTime RentDate { get; set; }
+        public DateTime RentUntil { get; set; }
+        public DateTime? ReturnDate { get; set; }
+    }
+
+
     static public class DataBaseContext
     {
         static public event EventHandler<CustomEventArgs> ErrorMessageBoxEvent;
         static public event EventHandler<CustomEventArgs> InfoMessageBoxEvent;
 
-        static private int GetCardID(string tbNrCardText)
+        static private int GetCardID(string NrCardText)
         {
             int cardNr;
-            if (!int.TryParse(tbNrCardText, out cardNr))
+            if (!int.TryParse(NrCardText, out cardNr))
             {
                 ErrorMessageBoxEvent(null, new CustomEventArgs { MessageText = "Type an ID \n(number)", Caption = "Wrong ID" });
                 return 0;
@@ -21,16 +33,43 @@ namespace Biblioteka
         }
 
 
-        public class GetRentedBooks_Result
+        static public List<KeyValuePair<string, int>> GetDataForGraph(string NrCardText)
         {
-            public int ID { get; set; }
-            public string Title { get; set; }
-            public DateTime RentDate { get; set; }
-            public DateTime RentUntil { get; set; }
-            public DateTime? ReturnDate { get; set; }
+            var cardNr = GetCardID(NrCardText);
+            if (cardNr == 0)
+                return null;
+
+            using (var context = new LibraryModel())
+            {
+                var sqlMinDate = (DateTime)System.Data.SqlTypes.SqlDateTime.MinValue;
+                var query = from rent in context.Rent
+                            where rent.ID_Card == cardNr
+                            group rent by SqlFunctions.DateAdd("day", SqlFunctions.DateDiff("day", sqlMinDate, rent.Rent_Date), sqlMinDate) into table
+                            select new { date = table.Key.Value, count = table.Count() };
+
+                return new List<KeyValuePair<string, int>>(query.AsEnumerable().Select(x => new KeyValuePair<string, int>(x.date.ToShortDateString(), x.count)).ToList());
+            }
         }
 
-        static public List<GetRentedBooks_Result> ShowRentedBooks(string NrCardText)
+        static public void Return(int ID)
+        {
+            using (var context = new LibraryModel())
+            {
+                var rented = (from rent in context.Rent
+                              where rent.ID == ID
+                              select rent).FirstOrDefault();
+                if (rented.Return != null)
+                    return;
+                var state = rented.Copy.Book_State;
+                rented.Return = new Return() { State_After_Return = state, State_Pre_Return = state, Return_Date = DateTime.Now };
+
+
+                context.SaveChanges();
+
+            }
+        }
+
+        static public List<RentedBooks> ShowRentedBooks(string NrCardText)
         {
             var cardNr = GetCardID(NrCardText);
             if (cardNr == 0)
@@ -40,7 +79,7 @@ namespace Biblioteka
             {
                 var query = from rent in context.Rent
                             where rent.ID_Card == cardNr
-                            select new GetRentedBooks_Result() { ID = rent.ID, ReturnDate = rent.Return.Return_Date, RentDate = rent.Rent_Date, RentUntil = rent.Expected_Return_Date, Title = rent.Copy.Book.Title };
+                            select new RentedBooks() { ID = rent.ID, ReturnDate = rent.Return.Return_Date, RentDate = rent.Rent_Date, RentUntil = rent.Expected_Return_Date, Title = rent.Copy.Book.Title };
                 return query.ToList();
             }
         }
@@ -105,6 +144,7 @@ namespace Biblioteka
             }
             return null;
         }
+
 
         #region query old
         //public class RentedBooks
